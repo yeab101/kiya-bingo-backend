@@ -26,6 +26,7 @@ app.use("/api/user", require("./routes/userRoute"));
 // app.use("/api/callback", require("./routes/callbackRoute"));
 app.use("/api/game", require("./routes/gameRoutes"));
 app.use("/api/transaction", require("./routes/transactionRoutes")); 
+app.use("/api/admin", require("./routes/adminRoutes")); 
 
 // Socket.io Configuration
 const server = http.createServer(app);
