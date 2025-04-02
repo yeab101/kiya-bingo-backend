@@ -36,17 +36,30 @@ router.get('/game/:gameId', async (req, res) => {
 });
 
 
-// // Route to get all games in waiting status
-// router.get('/status/waiting', async (req, res) => {
-//     try {
-//         const waitingGames = await BingoGame.find({ gameStatus: "waiting" })
-//             .sort({ createdAt: -1 });
+// Route to get all games in waiting status
+router.get('/status/finished', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 50;
+        const skip = (page - 1) * limit;
+
+        const finishedGames = await BingoGame.find({ gameStatus: "finished" })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const totalGames = await BingoGame.countDocuments({ gameStatus: "finished" });
         
-//         res.status(200).json(waitingGames);
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// });
+        res.status(200).json({
+            games: finishedGames,
+            currentPage: page,
+            totalPages: Math.ceil(totalGames / limit),
+            totalGames
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 // // Route to create a new game
 // router.post('/create/:stake', async (req, res) => {
